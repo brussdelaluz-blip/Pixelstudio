@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Studio - Cultura Empresarial</title>
+    <style>
+        :root {
+            --it-blue: #000002;
+            --it-gold: #b38e5d;
+            --pixel-purple: #6200ea;
+            --pixel-pink: #ff0266;
+            --bg: #f0f2f5;
+            --accent-blue: #00126c;
+            --text-main: #333;
+        }
+
+        body { 
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif; 
+            margin: 0; 
+            background: var(--bg); 
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+        
+        header { 
+            background: var(--it-blue); 
+            padding: 15px 5%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            border-bottom: 4px solid var(--it-gold);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .header-logo { width: 120px; display: flex; align-items: center; }
+        .header-logo img { width: 120%; height: auto; border-radius: 6px; }
+
+        .container { 
+            width: 95%; 
+            max-width: 1200px; 
+            margin: 40px auto; 
+            display: grid; 
+            grid-template-columns: 2fr 1fr; 
+            gap: 30px; 
+        }
+
+        .card { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+            margin-bottom: 30px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .section-title { 
+            border-left: 6px solid var(--pixel-purple); 
+            padding-left: 15px; 
+            color: var(--accent-blue); 
+            margin-top: 0;
+            letter-spacing: 1px;
+            font-size: 1.4rem;
+        }
+
+        .big-img { 
+            width: 100%; 
+            height: 380px; 
+            background: #e9ecef; 
+            border-radius: 12px; 
+            margin: 20px 0; 
+            overflow: hidden; 
+        }
+        .big-img img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .big-img img:hover { transform: scale(1.03); }
+
+        .process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+        .process-step { 
+            background: #f8f9fa; 
+            padding: 20px; 
+            border-radius: 12px; 
+            border: 1px solid #eee;
+        }
+        .process-step h4 { margin-top: 0; color: var(--pixel-purple); display: flex; align-items: center; gap: 10px; }
+
+        .product-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .gallery-item-card {
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #f0f0f0;
+        }
+        .gallery-item-card:hover { transform: translateY(-8px); box-shadow: 0 12px 20px rgba(0,0,0,0.15); }
+        .gallery-item-card img { width: 100%; height: 180px; object-fit: cover; }
+        .gallery-item-info { padding: 15px; text-align: center; background: #fff; }
+
+        .unit-btn { 
+            width: 100%; text-align: left; padding: 16px; background: #fff; 
+            border: 1px solid #eee; margin-top: 12px; cursor: pointer; 
+            font-weight: 600; border-radius: 10px; transition: 0.3s;
+            display: flex; justify-content: space-between; align-items: center;
+            color: var(--accent-blue);
+        }
+        .unit-btn:hover { background: #f0f4ff; border-color: var(--pixel-purple); }
+        .unit-content { 
+            display: none; 
+            padding: 20px; 
+            background: #ffffff; 
+            border: 1px solid #eee; 
+            border-top: none;
+            border-radius: 0 0 10px 10px; 
+            font-size: 0.95rem;
+            animation: slideDown 0.3s ease-out;
+            color: #555;
+        }
+
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .student-info p { margin: 10px 0; border-bottom: 1px solid #f0f0f0; padding-bottom: 5px; }
+        .student-info strong { color: black; font-size: 0.8rem; text-transform: uppercase; }
+
+        footer { 
+            background: var(--it-blue); color: white; text-align: center; 
+            padding: 40px 20px; margin-top: 60px;
+            border-top: 6px solid var(--it-gold);
+        }
+
+        .modal { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; backdrop-filter: blur(8px); }
+        .modal-content { max-width: 90%; max-height: 90%; border-radius: 8px; box-shadow: 0 0 30px rgba(255,255,255,0.2); }
+
+        @media (max-width: 950px) { 
+            .container { grid-template-columns: 1fr; } 
+            header { flex-direction: column; text-align: center; gap: 15px; }
+            .big-img { height: 250px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-logo"><img src="TecNM_logo.png" alt="TecNM"></div>
+    <div style="text-align: center;">
+        <h2 style="margin:0; font-size: 1.1rem; letter-spacing: 1px;">TECNOLÓGICO NACIONAL DE MÉXICO</h2>
+        <small style="color: var(--it-gold); font-weight: bold; text-transform: uppercase;">Campus Acapulco</small>
+    </div>
+    <div class="header-logo" style="justify-content: flex-end;"><img src="Gemini_Generated_Image_i1vr50i1vr50i1vr.png" alt="Pixel Studio Logo"></div>
+</header>
+
+<div class="container">
+    <main>
+        <section class="card">
+            <h2 class="section-title">Pixel Studio</h2>
+            <p style="font-size: 1.1rem; color: #666; font-style: italic;">"Tu mundo en la palma de tu mano: llaveros de Hama Beads y fotobotones personalizados con acabados de alta calidad."</p>
+            <div class="big-img">
+                <img src="Gemini_Generated_Image_f6yjv1f6yjv1f6yj.png" alt="Portada Pixel Studio">
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="section-title">Nuestra Identidad</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 15px;">
+                <div>
+                    <h4 style="color: var(--accent-blue); display: flex; align-items: center; gap: 8px;">🎯 Misión</h4>
+                    <p>Fomentar la creatividad local entregando productos que conecten emocionalmente con nuestros clientes a través del arte pixelado y la personalización única.</p>
+                </div>
+                <div>
+                    <h4 style="color: var(--accent-blue); display: flex; align-items: center; gap: 8px;">💎 Valores</h4>
+                    <ul style="padding-left: 20px; color: #555;">
+                        <li><strong>Precisión Técnica:</strong> Perfección en cada pixel.</li>
+                        <li><strong>Pasión por el Detalle:</strong> Acabados impecables.</li>
+                        <li><strong>Sostenibilidad:</strong> Optimización de recursos.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="section-title">Procesos de Producción</h2>
+            <div class="process-grid">
+                <div class="process-step">
+                    <h4>👾 Hama Beads</h4>
+                    <ol style="padding-left: 18px;">
+                        <li>Diseño Digital (Pixel Art)</li>
+                        <li>Montaje manual en Pegboard</li>
+                        <li>Fusión Térmica Controlada</li>
+                    </ol>
+                    <div class="gallery-item-card" style="margin-top:15px;" onclick="openModal('Gemini_Generated_Image_di9orndi9orndi9o.png')">
+                        <img src="Gemini_Generated_Image_di9orndi9orndi9o.png" alt="Planchado">
+                    </div>
+                </div>
+
+                <div class="process-step">
+                    <h4>📸 Fotobotones</h4>
+                    <ol style="padding-left: 18px;">
+                        <li>Impresión Fotográfica</li>
+                        <li>Corte de Precisión</li>
+                        <li>Prensado Industrial Manual</li>
+                    </ol>
+                    <div class="gallery-item-card" style="margin-top:15px;" onclick="openModal('Gemini_Generated_Image_ibizu3ibizu3ibiz.png')">
+                        <img src="Gemini_Generated_Image_ibizu3ibizu3ibiz.png" alt="Prensa">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="section-title">Catálogo Destacado</h2>
+            <div class="product-gallery">
+                <div class="gallery-item-card" onclick="openModal('WhatsApp Image 2026-03-15 at 2.31.51 AM.jpeg')">
+                    <img src="WhatsApp Image 2026-03-15 at 2.31.51 AM.jpeg" alt="Llavero Mario">
+                    <div class="gallery-item-info">
+                        <strong>Llaveros Artesanales</strong><br>
+                        <span style="color: var(--it-gold); font-weight: bold; font-size: 0.9rem;">Precio según tamaño</span>
+                    </div>
+                </div>
+                <div class="gallery-item-card" onclick="openModal('Gemini_Generated_Image_q4be41q4be41q4be.png')">
+                    <img src="Gemini_Generated_Image_q4be41q4be41q4be.png" alt="Botón">
+                    <div class="gallery-item-info">
+                        <strong>Botón Personalizado</strong><br>
+                        <span style="color: var(--it-gold); font-weight: bold; font-size: 0.9rem;">$20.00 MXN unidad</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <aside>
+        <div class="card" style="border-top: 5px solid var(--it-gold); color: black;">
+            <h3 style="margin-top:0; color: black; font-size: 1.1rem;">Perfil del Desarrollador</h3>
+            <div class="student-info" style="font-size: 0.9rem; margin-top: 15px; color: black;">
+                <p><strong>Nombre</strong><br> Bruno Santiago De La Luz Cruz</p>
+                <p><strong>Carrera</strong><br> Ing. Sistemas Computacionales</p>
+                <p><strong>Materia</strong><br> Cultura Empresarial</p>
+                <p><strong>Docente</strong><br> José Luis Regalado Radilla</p>
+            </div>
+        </div>
+
+     <div class="card">
+    <h3 style="margin-top:0; color: var(--accent-blue); font-size: 1.2rem; border-bottom: 2px solid #eee; padding-bottom: 10px;">
+        📚 Contenido Temático Académico
+    </h3>
+    
+    <button class="unit-btn" onclick="toggle('u1')">U1: Contexto de la empresa y Diagnóstico <span>▼</span></button>
+    <div id="u1" class="unit-content" style="line-height: 1.8;">
+        
+        <p><strong>1.1. Elementos de la cultura empresarial:</strong> 
+            Es el "ADN" de la organización. Se compone de elementos invisibles (creencias y valores) y visibles (artefactos, símbolos, y formas de interactuar). En <em>Pixel Studio</em>, nuestra cultura se basa en la agilidad y la innovación creativa.
+        </p>
+        
+        <p><strong>1.2. Técnicas para desarrollar habilidades:</strong> 
+            Metodologías activas para la resolución de problemas:
+            <br>• <strong>Design Thinking:</strong> Empatizar con el cliente para crear llaveros que realmente signifiquen algo.
+            <br>• <strong>SCAMPER:</strong> (Sustituir, Combinar, Adaptar, Modificar, Poner otros usos, Eliminar, Reordenar) usado para innovar en los acabados de nuestros fotobotones.
+        </p>
+
+        <p><strong>1.3. Nombre del proyecto:</strong> 
+            Debe cumplir con el atributo de <em>Naming</em>: Brevedad, eufonía, fácil pronunciación y recordación. <strong>
+        </p>
+
+        <p><strong>1.4. Naturaleza de la empresa:</strong> 
+            Se define por su actividad económica. Nuestra empresa es de carácter <strong>Industrial-Manufacturera</strong> (transformación de insumos como Hama Beads en productos terminados) y de <strong>Servicios Personales</strong> (personalización).
+        </p>
+
+        <p><strong>1.5. Descripción y justificación:</strong> 
+            La descripción define el alcance técnico. La justificación responde al <em>"Gap"</em> de mercado detectado: la falta de artículos personalizados de alta fidelidad con temática "Geek" y retro en la región.
+        </p>
+
+        <p><strong>1.6. Filosofía Organizacional:</strong> 
+            <br>• <strong>Misión:</strong> Proporcionar identidad a través de artículos personalizados de alta calidad.
+            <br>• <strong>Visión:</strong> Ser líderes regionales en accesorios personalizados para 2028.
+            <br>• <strong>Objetivos:</strong> Deben ser <strong>SMART</strong> (Específicos, Medibles, Alcanzables, Relevantes y con Tiempo definido).
+        </p>
+
+        <p><strong>1.7. Análisis FODA:</strong> 
+            Herramienta matricial de planeación estratégica. 
+            <br>• <em>Interno:</em> Fortalezas (habilidad técnica) y Debilidades (capacidad de producción inicial). 
+            <br>• <em>Externo:</em> Oportunidades (eventos de cultura pop) y Amenazas (alza en costo de importación de polímeros).
+        </p>
+
+        <p><strong>1.8. Ventaja competitiva:</strong> 
+            Es el factor diferenciador que nos hace únicos. En nuestro caso, es el <strong>acabado térmico uniforme</strong> que garantiza durabilidad, a diferencia de la competencia artesanal común.
+        </p>
+
+        <p><strong>1.9. Plan de negocio:</strong> 
+            Es la hoja de ruta integral. Incluye el Análisis de Mercado (Buyer Persona), Plan de Marketing (estrategia 4P), Estructura Organizacional y el Análisis de Factibilidad Financiera (Punto de Equilibrio).
+        </p>
+    </div>
+
+            <button class="unit-btn" style="background: var(--accent-blue); color: white; margin-top: 20px;" onclick="toggle('u6')">
+                🖼️ Ver Portafolio Digital <span>▼</span>
+            </button>
+            <div id="u6" class="unit-content">
+                <div class="gallery-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <img src="WhatsApp Image 2026-03-16 at 11.02.43 AM.jpeg" style="width:100%; border-radius:5px; cursor:pointer;" onclick="openModal(this.src)">
+                    <img src="WhatsApp Image 2026-03-16 at 11.02.43 AM (1).jpeg" style="width:100%; border-radius:5px; cursor:pointer;" onclick="openModal(this.src)">
+                </div>
+            </div>
+        </div>
+    </aside>
+</div>
+
+<footer>
+    <p><strong>Pixel Studio</strong> | Proyecto Académico © 2026</p>
+    <p style="font-size: 0.8rem; opacity: 0.8;">Instituto Tecnológico de Acapulco - Ingeniería en Sistemas Computacionales</p>
+</footer>
+
+<div id="myModal" class="modal" onclick="this.style.display='none'">
+    <img class="modal-content" id="imgFull">
+</div>
+
+<script>
+    function toggle(id) {
+        const content = document.getElementById(id);
+        const allContent = document.querySelectorAll('.unit-content');
+        const isVisible = content.style.display === "block";
+        
+        allContent.forEach(c => c.style.display = 'none');
+        if (!isVisible) {
+            content.style.display = "block";
+        }
+    }
+
+    function openModal(src) {
+        if(src && !src.includes('undefined')) {
+            document.getElementById("imgFull").src = src;
+            document.getElementById("myModal").style.display = "flex";
+        }
+    }
+</script>
+
+</body>
+</html>
